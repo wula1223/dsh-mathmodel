@@ -1,8 +1,8 @@
 /**
- * Mrite 工作区 —— 目录结构完全照搬 Skill/CLAUDE.md 的「项目结构」一节。
+ * 工作区 —— 目录结构遵循内置规范的「项目结构」一节。
  *
  * 为什么目录名用中文：
- *   Mrite 原文规定「代码、图、CSV、tex 文件一律中文命名」，目录也是中文。
+ *   规范要求「代码、图、CSV、tex 文件一律中文命名」，目录也是中文。
  *   改成英文会破坏与模板的兼容（模板里 \input{5.1.问题1的建立求解.tex} 是中文名），
  *   所以插件不做任何本地化改造，原样保留。
  *
@@ -33,7 +33,7 @@ export function templateDir(): string {
   return fileURLToPath(new URL('../templates/', import.meta.url))
 }
 
-/** 定位本包内随附的方法文档（Mrite 的 CLAUDE.md 原文） */
+/** 定位本包内随附的方法文档 */
 export function methodDocPath(): string {
   return fileURLToPath(new URL('../skill/METHOD.md', import.meta.url))
 }
@@ -101,7 +101,7 @@ export interface InitResult {
 }
 
 /**
- * 建 Mrite 工作区：题目/、数据/、求解/、论文/（含完整模板）。
+ * 建 数学建模工作区：题目/、数据/、求解/、论文/（含完整模板）。
  * 幂等：已存在的目录不覆盖；论文模板文件已存在则跳过，不冲掉用户内容。
  */
 export async function initWorkspace(

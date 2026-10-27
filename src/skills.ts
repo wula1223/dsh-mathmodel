@@ -4,19 +4,18 @@ import path from 'node:path'
 import type { Context } from '@deepseek-ai/cordis'
 
 /**
- * 把 Mrite 的 Skill/CLAUDE.md 原样注册为随包 skill。
+ * 把内置的论文规范文档注册为随包 skill。
  *
  * 关键决策：内容不改。
- *   这份 30KB 是 Mrite 的全部方法层——摘要字数分配、longtable 列宽公式、
+ *   这份 30KB 是完整的数学建模方法层——摘要字数分配、longtable 列宽公式、
  *   9 框流程图模板、各题型建模步骤划分，都在里面。
- *   封装的第一阶段只做「搬进来」，任何改写都属于改进阶段的事。
  *
  * 为什么用 resourceBase 指向文件而不是把全文塞进 content：
  *   skill 目录常驻的只有 name + description（决定路由），全文按需读取。
  *   30KB 常驻会挤占上下文，而绝大多数请求并不需要全文。
  */
 
-export const SKILL_NAME = 'mrite'
+export const SKILL_NAME = 'mathmodel'
 
 export const SKILL_DESCRIPTION =
   '数学建模竞赛全流程：读题→求解计划→逐题求解→写论文→编译 PDF。含论文规范（摘要≤900字1页、longtable列宽公式、流程图固定模板、各题型建模步骤）与 Python 绘图规范。Use when the user gives a contest problem (题目/数据 files) and asks to solve it, or when writing/revising a 数学建模 paper, or when deciding 摘要字数分配 / 表格列宽 / 图表规范 / 章节结构.'

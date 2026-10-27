@@ -13,14 +13,14 @@ import { readMethodDoc, listTemplates, readTemplate } from './skills.js'
 const NL = String.fromCharCode(10)
 
 /**
- * mr_init：建 Mrite 工作区。
- * 严格对应 CLAUDE.md「新题使用」第 1-3 步：复制模板 → 题目放 题目/ → 数据放 数据/。
+ * mr_init：建工作区。
+ * 对应规范「新题使用」第 1-3 步：复制模板 → 题目放 题目/ → 数据放 数据/。
  */
 export function registerInitTool(ctx: Context, config: Config) {
   ctx.tools.register(defineTool({
     name: 'mr_init',
     description:
-      'Create a Mrite working directory: 题目/ (problem statement), 数据/ (attachment data), 求解/ (generated), 论文/ (LaTeX template with format.cls + 17 chapter files + fonts). Idempotent — existing files are never overwritten. Use this first, before putting the contest files in place.',
+      'Create a math-modeling working directory: 题目/ (problem statement), 数据/ (attachment data), 求解/ (generated), 论文/ (LaTeX template with format.cls + 17 chapter files + fonts). Idempotent — existing files are never overwritten. Use this first, before putting the contest files in place.',
     parameters: {
       dir: { type: 'string', description: 'Workspace root. Defaults to config.workspaceRoot, else the current working directory.' },
     },
@@ -41,7 +41,7 @@ export function registerInitTool(ctx: Context, config: Config) {
       render: (_args, v) => {
         if (!v.ok) return [{ type: 'text', text: '✗ 建工作区失败：' + (v.error ?? '未知原因') }]
         const lines = [
-          '✓ Mrite 工作区就绪 → ' + v.workspace,
+          '✓ 数学建模工作区就绪 → ' + v.workspace,
           '新建：' + (v.created.length ? v.created.join('、') : '无'),
           '跳过（已存在）：' + (v.skipped.length ? v.skipped.length + ' 项' : '无'),
           '论文模板：' + v.templateFiles + ' 个文件已铺好',
@@ -82,7 +82,7 @@ export function registerStatusTool(ctx: Context, config: Config) {
   ctx.tools.register(defineTool({
     name: 'mr_status',
     description:
-      'Inspect the Mrite workspace: which problem files sit in 题目/, which data files sit in 数据/, whether 求解计划.md exists, how many 问题X/ directories were produced, and whether the paper has been compiled to PDF. Use when the user asks where the run stands, or before deciding the next step.',
+      'Inspect the math-modeling workspace: which problem files sit in 题目/, which data files sit in 数据/, whether 求解计划.md exists, how many 问题X/ directories were produced, and whether the paper has been compiled to PDF. Use when the user asks where the run stands, or before deciding the next step.',
     parameters: {
       dir: { type: 'string', description: 'Workspace root. Defaults to config.workspaceRoot, else the current working directory.' },
     },
@@ -105,7 +105,7 @@ export function registerStatusTool(ctx: Context, config: Config) {
       render: (_args, v) => {
         const mark = (b: boolean) => (b ? '✓' : '✗')
         const lines = [
-          'Mrite 工作区：' + v.workspace,
+          '数学建模工作区：' + v.workspace,
           mark(v.problems.length > 0) + ' 题目 ' + v.problems.length + ' 个' +
             (v.problems.length ? '：' + v.problems.join('、') : '（需放入 PDF/DOCX）'),
           mark(v.dataFiles.length > 0) + ' 数据 ' + v.dataFiles.length + ' 个' +
@@ -214,7 +214,7 @@ export function registerRunTool(ctx: Context, config: Config) {
   ctx.tools.register(defineTool({
     name: 'mr_run',
     description:
-      'Run one solve script (usually 求解/问题一/问题一_xxx.py) under the workspace, streaming back exit code, stdout/stderr and the files it created. Mrite requires one Python file per question and a compute-then-plot order, so run them one at a time and read the printed statistics before writing the paper. Use after the script is written, and fix and re-run until it exits 0.',
+      'Run one solve script (usually 求解/问题一/问题一_xxx.py) under the workspace, streaming back exit code, stdout/stderr and the files it created. The workflow expects one Python file per question and a compute-then-plot order, so run them one at a time and read the printed statistics before writing the paper. Use after the script is written, and fix and re-run until it exits 0.',
     parameters: {
       dir: { type: 'string', description: 'Workspace root. Defaults to config.workspaceRoot, else the current working directory.' },
       script: { type: 'string', description: 'Python script path relative to the workspace, e.g. "求解/问题一/问题一_预测.py".' },
@@ -318,11 +318,11 @@ export function registerBuildTool(ctx: Context, config: Config) {
   ctx.tools.register(defineTool({
     name: 'mr_build',
     description:
-      'Compile the paper exactly as Mrite prescribes: xelatex -interaction=nonstopmode 论文.tex, two passes, then count Error lines in 论文.log which must be 0. Returns errorCount, the Error lines, Overfull/Underfull layout warnings, page count and the PDF path. Use after writing the tex files, and re-run after every fix until errorCount is 0.',
+      'Compile the paper per the built-in compile rule: xelatex -interaction=nonstopmode 论文.tex, two passes, then count Error lines in 论文.log which must be 0. Returns errorCount, the Error lines, Overfull/Underfull layout warnings, page count and the PDF path. Use after writing the tex files, and re-run after every fix until errorCount is 0.',
     parameters: {
       dir: { type: 'string', description: 'Workspace root. Defaults to config.workspaceRoot, else the current working directory.' },
       texFile: { type: 'string', description: 'Main TeX file relative to the workspace. Defaults to 论文/论文.tex.' },
-      passes: { type: 'number', description: 'Compile passes. Defaults to 2, per Mrite.' },
+      passes: { type: 'number', description: 'Compile passes. Defaults to 2.' },
       timeoutMs: { type: 'number', description: 'Per-pass timeout in milliseconds. Defaults to config.buildTimeoutMs.' },
     },
     timeoutMs: 960_000,
@@ -400,14 +400,14 @@ export function registerBuildTool(ctx: Context, config: Config) {
 }
 
 /**
- * mr_method：取 Mrite 的方法规范原文（CLAUDE.md 全文）。
+ * mr_method：取内置的方法规范原文。
  * 这是「原样封装」的体现——规范不经过任何改写。
  */
 export function registerMethodTool(ctx: Context) {
   ctx.tools.register(defineTool({
     name: 'mr_method',
     description:
-      'Return the Mrite method specification verbatim — the original CLAUDE.md covering the full pipeline (Step 0 read input → Step 1 求解计划.md → Step 2 per-question solve → Step 3 paper chapters → Step 4 compile), the paper rules (摘要≤900 chars and exactly 1 page, longtable column-width formula, the fixed 9-box flowchart template, per-model-type modeling steps), and the Python rules (matplotlib only, compute-then-plot, cross-platform Chinese fonts). Read this before writing the plan, any solve script, or any paper section.',
+      'Return the built-in method specification — covering the full pipeline (Step 0 read input → Step 1 求解计划.md → Step 2 per-question solve → Step 3 paper chapters → Step 4 compile), the paper rules (摘要≤900 chars and exactly 1 page, longtable column-width formula, the fixed 9-box flowchart template, per-model-type modeling steps), and the Python rules (matplotlib only, compute-then-plot, cross-platform Chinese fonts). Read this before writing the plan, any solve script, or any paper section.',
     parameters: {
       full: { type: 'boolean', description: 'Return the full text. Defaults to true; set false to get only the section index.' },
     },
@@ -437,7 +437,7 @@ export function registerMethodTool(ctx: Context) {
         ok: true,
         chars: text.length,
         sections,
-        text: full ? text : ['Mrite 方法规范章节：', ...sections].join(NL),
+        text: full ? text : ['论文规范章节：', ...sections].join(NL),
       }
     },
   }))
@@ -450,7 +450,7 @@ export function registerTemplateTool(ctx: Context) {
   ctx.tools.register(defineTool({
     name: 'mr_template',
     description:
-      'List the bundled Mrite paper template files (format.cls, fonts, and the 17 chapter tex files), or read one file verbatim. Use when copying a chapter template to create 5.X.1.分析与准备.tex / 5.X.2.建模与求解.tex for a new question, or when checking what the template expects.',
+      'List the bundled paper template files (format.cls, fonts, and the 17 chapter tex files), or read one file verbatim. Use when copying a chapter template to create 5.X.1.分析与准备.tex / 5.X.2.建模与求解.tex for a new question, or when checking what the template expects.',
     parameters: {
       file: { type: 'string', description: 'Template file relative to templates/, e.g. "5.1.1.分析与准备.tex". Omit to list all files.' },
     },
@@ -472,7 +472,7 @@ export function registerTemplateTool(ctx: Context) {
           const body = v.content.length > 4000 ? v.content.slice(0, 4000) + NL + '…（已截断）' : v.content
           return [{ type: 'text', text: '模板 ' + v.file + '：' + NL + NL + body }]
         }
-        return [{ type: 'text', text: 'Mrite 论文模板 ' + v.files.length + ' 个文件：' + NL + v.files.map((f: string) => '  · ' + f).join(NL) }]
+        return [{ type: 'text', text: '论文模板 ' + v.files.length + ' 个文件：' + NL + v.files.map((f: string) => '  · ' + f).join(NL) }]
       },
     },
     async execute(args) {

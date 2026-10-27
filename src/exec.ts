@@ -1,7 +1,7 @@
 /**
- * 受控执行 —— 把 Mrite 规程里手写的 shell 命令变成可调用的函数。
+ * 受控执行 —— 把 规范里手写的 shell 命令变成可调用的函数。
  *
- * Mrite 原文规定的三条硬命令：
+ * 规范规定的三条硬命令：
  *   1. 读题：PDF 用 PyPDF2，DOCX 用 python-docx
  *   2. 编译：cd 论文 && xelatex -interaction=nonstopmode 论文.tex（跑两趟）
  *   3. 校验：grep -c 'Error' 论文.log 必须为 0
@@ -77,8 +77,8 @@ export function isErrorLine(line: string): boolean {
 }
 
 /**
- * 数错误行——对应 Mrite 规程的 `grep -c 'Error' 论文.log`。
- * Mrite 要求这个值必须为 0 才算编译通过。
+ * 数错误行——对应规范里的 `grep -c 'Error' 论文.log`。
+ * 规范要求这个值必须为 0 才算编译通过。
  *
  * 例外：字体缺失（fontspec 的 "cannot be found"）不计入。
  *   理由不是放宽标准，而是这类错误「报了也修不了」——字体是机器环境，
@@ -137,7 +137,7 @@ export function layoutWarnings(logText: string): string[] {
  * 检测「未转义下划线把中文拖进数学模式」导致的丢字。
  *
  * 为什么单独一条（实测踩到的真问题）：
- *   Mrite 规定文件名用中文，而中文文件名几乎必然含下划线（问题一_数据分析.py）。
+ *   规范要求文件名用中文，而中文文件名几乎必然含下划线（问题一_数据分析.py）。
  *   直接写进 tex，LaTeX 会把 `_` 当数学下标，后面那段中文就落到数学模式里，
  *   数学字体 Times New Roman 没有中文字形 → 日志报
  *   "Missing character: There is no 数 (U+6570) in font Times New Roman"。
@@ -176,7 +176,7 @@ export interface BuildResult {
 }
 
 /**
- * 编译论文。严格照 Mrite：xelatex -interaction=nonstopmode 跑 2 趟，
+ * 编译论文。严格按规范：xelatex -interaction=nonstopmode 跑 2 趟，
  * 然后检查 Error 数为 0、PDF 是否产出。
  */
 export async function buildPaper(
@@ -243,7 +243,7 @@ export async function buildPaper(
   } catch { /* 无 PDF */ }
 
   // 字体缺失是最常见、也最容易被误判成「模板坏了」的失败。
-  // Menlo 是 macOS 系统字体，Mrite 的 format.cls 写死了它，
+  // Menlo 是 macOS 系统字体，模板 format.cls 写死了它，
   // 在 Windows/Linux 上必然找不到。单独归类，给出替换建议而不是让人猜。
   const missingFonts = detectMissingFonts(logText)
   const missingCjk = detectMissingCJK(logText)
@@ -257,7 +257,7 @@ export async function buildPaper(
   if (timedOut) error = '编译超时（' + opts.timeoutMs + 'ms）'
   else if (missingFonts.length > 0) {
     error = '模板要求的字体在本机不存在：' + missingFonts.join('、') +
-      '。这是 Mrite format.cls 的平台依赖（Menlo 是 macOS 系统字体），' +
+      '。这是模板 format.cls 的平台依赖（Menlo 是 macOS 系统字体），' +
       '把 format.cls 里对应的 \\setmonofont 改成 ' +
       (process.platform === 'win32' ? 'Consolas' : 'DejaVu Sans Mono') +
       ' 即可；或安装该字体。'
@@ -303,7 +303,7 @@ export interface ExtractResult {
 }
 
 /**
- * 抽取题目文本。Mrite 规定 PDF 用 PyPDF2、DOCX 用 python-docx。
+ * 抽取题目文本。规范规定 PDF 用 PyPDF2、DOCX 用 python-docx。
  * 这里生成一段内联 Python 并执行，避免依赖额外文件。
  */
 export async function extractProblem(
@@ -338,7 +338,7 @@ export async function extractProblem(
         'print("\\n".join((p.extract_text() or "") for p in r.pages))',
       ].join('\n')
 
-  const tmp = path.join(ws, '.mrite-extract.py')
+  const tmp = path.join(ws, '.mathmodel-extract.py')
   await fs.writeFile(tmp, py + '\n', 'utf8')
   try {
     const r = await run(opts.pythonPath, [tmp, src], ws, opts.timeoutMs)
