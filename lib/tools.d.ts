@@ -1,4 +1,4 @@
-import type { Context } from '@deepseek-ai/cordis';
+import type { Context } from './types.js';
 import type { Config } from './config.js';
 /**
  * mr_init：建工作区。

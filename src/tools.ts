@@ -1,5 +1,5 @@
-import { defineTool } from '@deepseek-ai/dsh-tools'
-import type { Context } from '@deepseek-ai/cordis'
+import { defineTool } from './define-tool.js'
+import type { Context } from './types.js'
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
 import type { Config } from './config.js'

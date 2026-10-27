@@ -1,7 +1,7 @@
 import { fileURLToPath } from 'node:url'
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
-import type { Context } from '@deepseek-ai/cordis'
+import type { Context } from './types.js'
 
 /**
  * 把内置的论文规范文档注册为随包 skill。

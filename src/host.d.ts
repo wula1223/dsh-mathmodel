@@ -1,40 +1,14 @@
 /**
- * 宿主 @deepseek-ai/* 包在桌面端 asar 内不携带可被 tsc 解析的 .d.ts，
- * 这里给出最小 ambient 声明，使本插件可以编译。
- * 运行期由 DSH 的 Loader 提供真实实现。
+ * 最小 ambient 声明：只为 tsc 提供 `@deepseek-ai/schemastery` 的类型。
+ *
+ * 为什么只声明这一个：
+ *   实测用户 profile 的 node_modules 里，`@deepseek-ai/schemastery` 【存在】，
+ *   而 `@deepseek-ai/dsh-tools` 和 `@deepseek-ai/cordis` 【不存在】。
+ *   后两者由 DSH Loader 运行时内部提供，插件若 import 它们，
+ *   别人装完会直接抛 "Cannot find package"，整个插件加载失败。
+ *   所以本插件只在运行期真正需要的地方保留 schemastery，
+ *   工具构造与 Context 类型都改用本地的 `define-tool.ts` / `types.ts`。
  */
-declare module '@deepseek-ai/cordis' {
-  export interface Context {
-    get(name: string): any
-    effect(fn: () => void | (() => void), label?: string): void
-    /** dsh-tools 注册的服务 */
-    tools: {
-      register(definition: any): () => void
-    }
-  }
-}
-
-declare module '@deepseek-ai/dsh-tools' {
-  export interface ToolOutputSpec {
-    schema: any
-    render(args: any, value: any): { type: string; text: string }[]
-    presentationMeta?(args: any, value: any): any
-  }
-  export interface ToolOptions {
-    name: string
-    description: string
-    parameters?: Record<string, any>
-    output: ToolOutputSpec
-    timeoutMs?: number
-    deferLoading?: boolean
-    isConcurrencySafe?: boolean
-    presentCall?(args: any): any
-    presentResult?(args: any, value: any): any
-    execute(args: any, exec: any): Promise<any>
-  }
-  export function defineTool(options: ToolOptions): any
-}
-
 declare module '@deepseek-ai/schemastery' {
   interface Schema<T> {
     default(value: T): Schema<T>

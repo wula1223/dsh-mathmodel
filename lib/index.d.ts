@@ -1,4 +1,4 @@
-import type { Context } from '@deepseek-ai/cordis';
+import type { Context } from './types.js';
 import { Config, type Config as MathModelConfig } from './config.js';
 export declare const name = "dsh-mathmodel";
 /** 依赖的宿主服务：tools 必选。 */

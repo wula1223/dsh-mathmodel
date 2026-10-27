@@ -1,4 +1,4 @@
-import type { Context } from '@deepseek-ai/cordis'
+import type { Context } from './types.js'
 import { Config, type Config as MathModelConfig } from './config.js'
 import { registerSkills } from './skills.js'
 import {

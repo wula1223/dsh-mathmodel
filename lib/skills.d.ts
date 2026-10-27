@@ -1,4 +1,4 @@
-import type { Context } from '@deepseek-ai/cordis';
+import type { Context } from './types.js';
 /**
  * 把内置的论文规范文档注册为随包 skill。
  *
