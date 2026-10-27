@@ -1,14 +1,13 @@
 {
   "name": "dsh-mathmodel",
   "version": "1.0.0",
-  "description": "MathModel 插件封装：数学建模竞赛 Skill（读题→计划→求解→论文→编译）原样封装为 DeepSeek Harness 插件",
+  "description": "DeepSeek Harness 插件：把数学建模竞赛全流程（读题→求解→论文→编译）装进 DSH",
   "type": "module",
   "main": "lib/index.js",
   "files": [
     "lib",
     "skill",
     "templates",
-    "assets",
     "cordis.patch.yml",
     "LICENSE",
     "NOTICE"
