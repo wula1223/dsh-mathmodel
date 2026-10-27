@@ -1,0 +1,31 @@
+# 依赖与构建产物
+node_modules/
+lib/
+
+# 测试运行产生的临时工作区（不要提交）
+论文/
+求解/
+题目/
+数据/
+
+# LaTeX 编译中间文件
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.bbl
+*.blg
+
+# 系统文件
+.DS_Store
+Thumbs.db
+~$*
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/

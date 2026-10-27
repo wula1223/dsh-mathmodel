@@ -1,0 +1,23 @@
+# 第三方来源与许可声明
+
+本插件的**方法层与论文模板全部来自 Mrite**，本项目只做封装。
+
+## Mrite
+
+- 仓库：https://github.com/Rzna-5559/Mrite
+- 作者：Rzna
+- 使用部分：
+  - `skill/METHOD.md` ← Mrite `Skill/CLAUDE.md`（原文，未修改一字）
+  - `templates/` ← Mrite `模板/`（format.cls + 17 个章节 tex + 思源宋体字体文件）
+- 许可证：Mrite 仓库内 `Skill/README.md` 声明 MIT License，但仓库根目录**没有 LICENSE 文件**。
+  本项目按 MIT 分发；如用于商业场景，建议先与 Mrite 作者确认。
+- 思源宋体（Source Han Serif）由 Adobe 发布，采用 SIL Open Font License 1.1。
+
+## 本插件新增的部分
+
+`src/` 下的全部代码、`test/` 下的全部测试、README 与 NOTICE 为本项目原创，采用 MIT。
+
+## 不含的内容
+
+- 任何竞赛真题、获奖论文原文、官方评阅细则
+- Mrite `Skill/题目/` 与 `Skill/数据/` 中的示例赛题与数据

@@ -1,0 +1,5 @@
+# 本组合包贡献的配置层：插入插件本体这一行。
+# name 必须用【包名】，Loader 按此 specifier 导入。
+- insert:
+    - id: mathmodel
+      name: "dsh-mathmodel"
